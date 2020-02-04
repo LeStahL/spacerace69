@@ -40,6 +40,7 @@ demoId = demoJSON['identifier']
 demoGroup = demoJSON['group']
 demoParty = demoJSON['party']
 partyYear = demoJSON['year']
+demoName = demoJSON['name']
 
 # Target name
 f.write('set(DEMO_IDENTIFIER ' + demoId + ')' + '\n')
@@ -84,3 +85,54 @@ for scene in demoJSON["scenes"]:
     
 f.write(')\n')
 f.close()
+
+# Generate :/[demogroup].nfo
+f = open(demoGroup + ".nfo", "wt")
+f.write('            _________________________           \n')
+f.write('           /\\           ____         \\          \n')
+f.write('          /  \\          \\  /\\         \\         \n')
+f.write('         /    \\          \\/  \\         \\        \n')
+f.write('        /  /\\  \\          \\   \\         \\       \n')
+f.write('       /  /__\\  \\          \\   \\         \\      \n')
+f.write('      /   \\   \\  \\          \\   \\         \\     \n')
+f.write('     /     \\   \\  \\          \\___\\         \\    \n')
+f.write('    /  /\\   \\   \\  \\           ____         \\   \n')
+f.write('   /  /  \\   \\   \\  \\          \\  /\\         \\  \n')
+f.write('  /  /    \\   \\   \\  \\          \\/  \\         \\ \n')
+f.write(' /  /   ___\\   \\___\\  \\          ¯¯¯¯          \\\n')
+f.write(' \\ /__ /\\   \\  /   /  /¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯/\n')
+f.write('  \\\\  /  \\   \\/__ /  /   _________________    / \n')
+f.write('   \\\\/    \\      /  /   /     \\__\\       /   /  \n')
+f.write('    \\      \\    /  /   /      /  /      /   /   \n')
+f.write('     \\      \\  /  /   /      /  / \\    /   /    \n')
+f.write('      \\   /\\ \\/  /   /\\     /  /   \\  /   /     \n')
+f.write('       \\ /__\\   /   /  \\   /  / \\   \\/   /      \n')
+f.write('        \\\\  /  /    ¯¯¯/  /  /  /¯¯¯¯   /       \n')
+f.write('         \\\\/  /       / \\/  /  /       /        \n')
+f.write('          \\  /       /   ¯¯¯  /       /         \n')
+f.write('           \\/        ¯¯¯¯¯¯¯¯¯       /          \n')
+f.write('            ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯           \n')
+f.write('\n')
+f.write((':: ' + demoName + ' ::').center(49)+'\n')
+f.write(('by ' + demoGroup).center(49)+'\n')
+f.write(('at ' + demoParty + ' ' + str(partyYear)).center(49)+'\n')
+f.write('\n\n')
+f.write((':: Instructions ::').center(49)+'\n')
+f.write(('\"offend\" plays the demo.').center(49)+'\n')
+f.write(('If it crashes, try selecting different').center(49)+'\n')
+f.write(('SFX buffer sizes in the selector.').center(49)+'\n')
+f.write('\n\n')
+f.write((':: ' + demoGroup + ' ::').center(49)+'\n')
+for author in demoJSON['authors']:
+    line = author['handle'] + ' - fancy '
+    for credit in author['credits'][:-1]:
+        line += credit + ' ^ '
+    line += author['credits'][-1]
+    f.write(line.center(49)+'\n')
+f.write('\n\n')
+f.write(('Once we offend, we cannot stop.').center(49)+'\n')
+for line in demoJSON['description']:
+    f.write(line.center(49)+'\n')
+f.write('\n')
+f.close()
+
