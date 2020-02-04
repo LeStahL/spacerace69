@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
 
-project(providence)
+project(demo)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Configurables
@@ -33,21 +33,15 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(Qt5 COMPONENTS Widgets)
 
+# Add target for generators
+execute_process(
+    COMMAND ${Python3_EXECUTABLE} "${PROJECT_SOURCE_DIR}/generator/generator.py" "${PROJECT_SOURCE_DIR}/config/demo.json"
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+)
+include(config.gen.cmake)
+
 set(COMMON_HEADERS config_types.h config.h glext.h engine/platform.h engine/renderer.h engine/shader.h engine/loader.h engine/orchestrator.h engine/midi.h engine/debug.h)
 set(SFX_SHADER sfx.frag)
-set(SHADER_FILES
-        gfx/load.frag
-        gfx/logo210.frag
-        gfx/text.frag
-        gfx/post.frag
-        gfx/debug.frag
-        gfx/forestmountains.frag
-        gfx/forestinside.frag
-        gfx/branch.frag
-        gfx/mountains.frag
-        gfx/flowers.frag
-        gfx/greetings.frag
-)
 set(SHADER_SYMBOLS_PATH gfx/symbols/)
 set(STRINGS_FILE font/strings.txt)
 
@@ -82,7 +76,7 @@ add_custom_target(texture_packing
     BYPRODUCTS ${FONT_HEADER}
 )
 
-add_executable(providence
+add_executable(${DEMO_IDENTIFIER}
     ls.c
     ${COMMON_HEADERS}
     ${DEMO_HEADERS}
@@ -91,34 +85,35 @@ add_executable(providence
     ${FRAGMENT_SHADERS}
     ${SHADER_FILES}
 )
-add_dependencies(providence minify_sfx)
-add_dependencies(providence minify_shaders)
-add_dependencies(providence texture_packing)
 
-target_include_directories(providence SYSTEM PRIVATE "${OPENGL_INCLUDE_DIR}")
+add_dependencies(${DEMO_IDENTIFIER} minify_sfx)
+add_dependencies(${DEMO_IDENTIFIER} minify_shaders)
+add_dependencies(${DEMO_IDENTIFIER} texture_packing)
 
-target_link_libraries(providence OpenGL::GL)
+target_include_directories(${DEMO_IDENTIFIER} SYSTEM PRIVATE "${OPENGL_INCLUDE_DIR}")
+
+target_link_libraries(${DEMO_IDENTIFIER} OpenGL::GL)
 
 if(MSVC)
-    set_target_properties(providence PROPERTIES LINK_FLAGS "/ENTRY:demo /SUBSYSTEM:Windows /OPT:REF /OPT:ICF=10 /VERBOSE /NODEFAULTLIB")
-    target_compile_options(providence PRIVATE /Gy /O1 /fp:fast /GR- /GS- /MT )
+    set_target_properties(${DEMO_IDENTIFIER} PROPERTIES LINK_FLAGS "/ENTRY:demo /SUBSYSTEM:Windows /OPT:REF /OPT:ICF=10 /VERBOSE /NODEFAULTLIB")
+    target_compile_options(${DEMO_IDENTIFIER} PRIVATE /Gy /O1 /fp:fast /GR- /GS- /MT )
 
     if (MSVC_VERSION GREATER_EQUAL 1910) # VS2017
-        target_link_libraries(providence User32.lib Winmm.lib ucrt.lib msvcrt.lib vcruntime.lib Vfw32.lib)
+        target_link_libraries(${DEMO_IDENTIFIER} User32.lib Winmm.lib ucrt.lib msvcrt.lib vcruntime.lib Vfw32.lib)
     else()
         # for debug output: User32.lib ucrt.lib msvcrt.lib
-        target_link_libraries(providence User32.lib Winmm.lib ucrt.lib msvcrt.lib)
+        target_link_libraries(${DEMO_IDENTIFIER} User32.lib Winmm.lib ucrt.lib msvcrt.lib)
     endif()
 
     if (CMAKE_SIZEOF_VOID_P EQUAL 4 AND MINIFY_64K AND (MSVC_IDE OR CMAKE_BUILD_TYPE STREQUAL "Release"))
-        target_compile_definitions(providence PRIVATE "$<$<CONFIG:RELEASE>:MINIFY_64K>")
+        target_compile_definitions(${DEMO_IDENTIFIER} PRIVATE "$<$<CONFIG:RELEASE>:MINIFY_64K>")
         find_program(KKRUNCHY_K7 kkrunchy_k7.exe HINTS "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/bin")
-        add_custom_command(TARGET providence COMMAND "$<$<CONFIG:RELEASE>:${KKRUNCHY_K7}>" ARGS --best "$<TARGET_FILE:providence>" --out "$<TARGET_FILE_DIR:providence>/providencec.exe" POST_BUILD)
+        add_custom_command(TARGET ${DEMO_IDENTIFIER} COMMAND "$<$<CONFIG:RELEASE>:${KKRUNCHY_K7}>" ARGS --best "$<TARGET_FILE:${DEMO_IDENTIFIER}>" --out "$<TARGET_FILE_DIR:${DEMO_IDENTIFIER}>/${DEMO_IDENTIFIER}c.exe" POST_BUILD)
     endif()
 else()
     find_package(SDL2 REQUIRED)
-    target_include_directories(providence SYSTEM PRIVATE ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(providence ${SDL2_LIBRARIES})
+    target_include_directories(${DEMO_IDENTIFIER} SYSTEM PRIVATE ${SDL2_INCLUDE_DIRS})
+    target_link_libraries(${DEMO_IDENTIFIER} ${SDL2_LIBRARIES})
 endif()
 
 

@@ -1,0 +1,50 @@
+{
+    "name":"Spacerace 69",
+    "identifier":"spacerace69",
+    "group":"Team210",
+    "party":"Revision",
+    "year":2020,
+    "authors":
+    [
+        {
+            "handle":"NR4",
+            "realname":"Alexander Kraus",
+            "email":"nr4@z10.info",
+            "credits":["code","gfx"]
+        },
+        {
+            "handle":"QM",
+            "realname":"Matthias Weinreuter",
+            "email":"qm@z10.info",
+            "credits":["code","sfx"]
+        },
+        {
+            "handle":"LeMique",
+            "realname":"Michael Daam",
+            "email":"mic@z10.info",
+            "credits":["gfx","direction","feedback"]
+        }
+    ],
+    "length":180.0,
+    "scenes":
+    [
+        {
+            "name":"Scene 1",
+            "fragment":"scene1.frag",
+            "authors":
+            [
+                {"name":"NR4"}
+            ],
+            "start":0.0
+        },
+        {
+            "name":"Scene 2",
+            "fragment":"scene2.frag",
+            "authors":
+            [
+                {"name":"NR4"}
+            ],
+            "start":20.0
+        }
+    ]
+}
