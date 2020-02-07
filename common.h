@@ -19,13 +19,13 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-const char *demoname = "Providence/Team210";
+#include "common.gen.h"
 
 #include "config.h"
 #include "engine/renderer.h"
 #include "engine/shader.h"
 #include "engine/loader.h"
-#include "scenes.h"
+#include "scenes.gen.h"
 #include "engine/orchestrator.h"
 
 #include <stddef.h>
@@ -191,7 +191,6 @@ unsigned int start_at_scene = 0;
 
 // Music shader globals
 int sample_rate = 44100, channels = 2;
-double duration1 = duration; //3 min running time
 float *smusic1;
 int music1_size;
 float texs = 512;

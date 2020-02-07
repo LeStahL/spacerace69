@@ -50,7 +50,7 @@ set(STRINGS_FILE font/strings.txt)
 # Demo executable
 #################################
 
-set(DEMO_HEADERS common.h draw.h scenes.h pal_linux.h pal_win32.h sequence.h)
+set(DEMO_HEADERS common.h draw.gen.h scenes.gen.h common.gen.h pal_linux.h pal_win32.h sequence.h)
 
 set(SFX_HEADER sfx.h)
 add_custom_target(minify_sfx

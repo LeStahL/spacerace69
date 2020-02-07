@@ -18,7 +18,7 @@
 
 #define DEBUG // Shader debug i/o
 #define DEBUG_SHADER // Shader compile and link errors
-#define MIDI // APC40 mkII controls
+// #define MIDI // APC40 mkII controls
 // #define RECORD // Compile in recording capabilities
 
 #define DEMO
@@ -507,7 +507,7 @@ void draw()
     }
 #endif
     
-#include "draw.h"
+#include "draw.gen.h"
     
     quad();
 

@@ -31,7 +31,8 @@ if rest == []:
     exit()
 
 f = open(rest[0], 'rt')
-demoJSON = json.load(f);
+demoJSON = json.load(f)
+f.close()
 
 ### Generate :/config.gen.cmake
 f = open('config.gen.cmake', 'wt')
@@ -41,6 +42,7 @@ demoGroup = demoJSON['group']
 demoParty = demoJSON['party']
 partyYear = demoJSON['year']
 demoName = demoJSON['name']
+demoLength = demoJSON['length']
 
 # Target name
 f.write('set(DEMO_IDENTIFIER ' + demoId + ')' + '\n')
@@ -56,7 +58,6 @@ for scene in demoJSON["scenes"]:
         g.write("/* " + demoId + " - PC64k intro by " + demoGroup + ' at ' + demoParty + str(partyYear) + '\n')
         for author in scene['authors']:
             authorData = authorJSON(author['name'], demoJSON)
-            print(author['name'])
             g.write(" * Copyright (C) " + str(partyYear) + " " + authorData['realname'] + ' <' + authorData['email'] + '>\n')
         g.write(' *\n')
         g.write(' * This program is free software: you can redistribute it and/or modify\n')
@@ -75,6 +76,11 @@ for scene in demoJSON["scenes"]:
         g.write('\n')
         g.write('#version 130\n')
         g.write('\n')
+        g.write('out vec4 gl_FragColor;\n')
+        g.write('\n')
+        g.write('uniform float iTime;\n')
+        g.write('uniform vec2 iResolution;\n')
+        g.write('\n')
         g.write('void main()\n')
         g.write('{\n')
         g.write('}\n')
@@ -82,11 +88,14 @@ for scene in demoJSON["scenes"]:
     
     # Add filename to scenes list
     f.write('    ' + filename + '\n')
-    
+f.write('    gfx/load.frag\n')
+f.write('    gfx/post.frag\n')
+f.write('    gfx/text.frag\n')
+f.write('    gfx/debug.frag\n')
 f.write(')\n')
 f.close()
 
-# Generate :/[demogroup].nfo
+### Generate :/[demogroup].nfo
 f = open(demoGroup + ".nfo", "wt")
 f.write('            _________________________           \n')
 f.write('           /\\           ____         \\          \n')
@@ -136,3 +145,73 @@ for line in demoJSON['description']:
 f.write('\n')
 f.close()
 
+### Generate common.gen.h with global settings like demo name, duration, etc.
+f = open('common.gen.h', 'wt')
+f.write('#ifndef COMMON_GEN_H\n')
+f.write('#define COMMON_GEN_H\n')
+f.write('const char *demoname = \"' + demoName + ' / ' + demoGroup + '\";\n')
+f.write('#define duration (190)\n')
+f.write('const double duration1 = duration;\n')
+f.write('#endif\n')
+f.close()
+
+### Generate readme.md with up-to-date information
+f = open('readme.md', 'wt')
+f.write('# ' + demoName + '\n')
+f.write('PC-64k-Intro by ' + demoGroup + ' at ' + demoParty + ' ' + str(partyYear) + '\n\n')
+f.write('# Licenses\n')
+for copyrightNotice in demoJSON['license']:
+    f.write('- '+copyrightNotice.replace('YEAR', str(partyYear)).replace('GROUP', demoGroup) + '\n')
+f.write('\n# Contributing members of Team210\n')
+for author in demoJSON['authors']:
+    line = author['handle'] + ' - '
+    for credit in author['credits'][:-1]:
+        line += credit + ' ^ '
+    line += author['credits'][-1]
+    f.write('- '+line+'\n')
+f.close()
+
+### Generate scenes.gen.h with scene information
+f = open('scenes.gen.h', 'wt')
+f.write('#ifndef SCENES_GEN_H\n')
+f.write('#define SCENES_GEN_H\n')
+f.write('\n')
+for sceneJSON in demoJSON['scenes']:
+    f.write('#define t_' + sceneJSON['fragment'].strip('.frag') + ' (' + str(sceneJSON['start'])+')\n')
+f.write('const double start_times[] = {\n')
+for sceneJSON in demoJSON['scenes'][:-1]:
+    sceneIdentifier = sceneJSON['fragment'].strip('.frag')
+    f.write('t_' + sceneIdentifier + ',' + '\n')
+f.write('t_' + demoJSON['scenes'][-1]['fragment'].strip('.frag') + '\n};\n')
+f.write('const char *scene_names[] = {\n')
+for sceneJSON in demoJSON['scenes'][:-1]:
+    f.write('\"' + sceneJSON['name']+ '\",' + '\n')
+f.write('\"' + demoJSON['scenes'][-1]['name']+ '\"' + '\n};\n')
+f.write('const unsigned int nscenes = ARRAYSIZE(start_times);\n')
+f.write('// We need these two arrays to always have the same size - the following line will cause a compiler error if this is ever not the case\n')
+f.write('_STATIC_ASSERT(ARRAYSIZE(start_times) == ARRAYSIZE(scene_names));\n')
+f.write('#endif')
+f.close()
+
+### Generate draw.gen.h with drawing code
+f = open('draw.gen.h', 'wt')
+f.write('#ifndef DRAW_GEN_H\n')
+f.write('#define DRAW_GEN_H\n')
+for i in range(len(demoJSON['scenes'])):
+    sceneJSON = demoJSON['scenes'][i]
+    sceneIdentifier = sceneJSON['fragment'].strip('.frag')
+    if i > 0: 
+        f.write('else ')
+    if i < len(demoJSON['scenes'])-1:
+        f.write('if(t < t_' + demoJSON['scenes'][i+1]['fragment'].strip('.frag') + ')\n')
+    f.write('{\n')
+    f.write('    glUseProgram(shader_program_gfx_' + sceneIdentifier + '.handle);\n')
+    f.write('    glUniform1f(shader_uniform_gfx_' + sceneIdentifier + '_iTime, t - t_' + sceneIdentifier + ');\n')
+    f.write('    glUniform2f(shader_uniform_gfx_' + sceneIdentifier + '_iResolution, w, h);\n')
+    f.write('#ifdef MIDI\n')
+    for j in range(8):
+        f.write('    glUniform1f(shader_uniform_gfx_' + sceneIdentifier + '_iFader' + str(j) + ', fader' + str(j) + ');\n')
+    f.write('#endif\n')
+    f.write('}\n')
+f.write('#endif\n')
+f.close()

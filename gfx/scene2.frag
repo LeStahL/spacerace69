@@ -16,6 +16,11 @@
 
 #version 130
 
+out vec4 gl_FragColor;
+
+uniform float iTime;
+uniform vec2 iResolution;
+
 void main()
 {
 }
