@@ -177,12 +177,12 @@ f.write('#ifndef SCENES_GEN_H\n')
 f.write('#define SCENES_GEN_H\n')
 f.write('\n')
 for sceneJSON in demoJSON['scenes']:
-    f.write('#define t_' + sceneJSON['fragment'].strip('.frag') + ' (' + str(sceneJSON['start'])+')\n')
+    f.write('#define t_' + sceneJSON['fragment'].replace('.frag', '') + ' (' + str(sceneJSON['start'])+')\n')
 f.write('const double start_times[] = {\n')
 for sceneJSON in demoJSON['scenes'][:-1]:
-    sceneIdentifier = sceneJSON['fragment'].strip('.frag')
+    sceneIdentifier = sceneJSON['fragment'].replace('.frag', '')
     f.write('t_' + sceneIdentifier + ',' + '\n')
-f.write('t_' + demoJSON['scenes'][-1]['fragment'].strip('.frag') + '\n};\n')
+f.write('t_' + demoJSON['scenes'][-1]['fragment'].replace('.frag', '') + '\n};\n')
 f.write('const char *scene_names[] = {\n')
 for sceneJSON in demoJSON['scenes'][:-1]:
     f.write('\"' + sceneJSON['name']+ '\",' + '\n')
@@ -199,11 +199,11 @@ f.write('#ifndef DRAW_GEN_H\n')
 f.write('#define DRAW_GEN_H\n')
 for i in range(len(demoJSON['scenes'])):
     sceneJSON = demoJSON['scenes'][i]
-    sceneIdentifier = sceneJSON['fragment'].strip('.frag')
+    sceneIdentifier = sceneJSON['fragment'].replace('.frag', '')
     if i > 0: 
         f.write('else ')
     if i < len(demoJSON['scenes'])-1:
-        f.write('if(t < t_' + demoJSON['scenes'][i+1]['fragment'].strip('.frag') + ')\n')
+        f.write('if(t < t_' + demoJSON['scenes'][i+1]['fragment'].replace('.frag', '') + ')\n')
     f.write('{\n')
     f.write('    glUseProgram(shader_program_gfx_' + sceneIdentifier + '.handle);\n')
     f.write('    glUniform1f(shader_uniform_gfx_' + sceneIdentifier + '_iTime, t - t_' + sceneIdentifier + ');\n')
