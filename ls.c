@@ -19,7 +19,7 @@
 #define DEBUG // Shader debug i/o
 #define DEBUG_SHADER // Shader compile and link errors
 // #define MIDI // APC40 mkII controls
-// #define RECORD // Compile in recording capabilities
+#define RECORD // Compile in recording capabilities
 
 #define DEMO
 
@@ -494,9 +494,6 @@ void draw()
     t = t_now;
     if(t > t_end)
     {
-#ifdef RECORD
-        if(recording) capFileSaveAs(hCaptureWindow, record_filename); 
-#endif
         ExitProcess(0);
     }
     
@@ -535,7 +532,7 @@ void draw()
     glUniform1f(shader_uniform_gfx_text_iTime, t);
     glUniform1i(shader_uniform_gfx_text_iChannel0, 0);
     glUniform1i(shader_uniform_gfx_text_iFont, 1);
-    glUniform1f(shader_uniform_gfx_text_iFSAA, fsaa);
+//     glUniform1f(shader_uniform_gfx_text_iFSAA, fsaa);
     
 #ifdef MIDI
 //     glUniform1f(shader_uniform_gfx_text_iFader0, faders[0]);
@@ -598,6 +595,16 @@ void draw()
 //     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, font_texture_size, font_texture_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     
     quad();
+#endif
+    
+#if defined RECORD
+    // Gen filename
+    if(recording)
+    {
+        char filename[1024];
+        sprintf(filename, "%s\\frame%06d.bmp", record_filename, frame);
+        screenshot(filename);
+    }
 #endif
     
     glBindTexture(GL_TEXTURE_2D, 0);
