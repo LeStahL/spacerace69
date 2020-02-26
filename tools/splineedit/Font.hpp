@@ -1,20 +1,19 @@
 #ifndef FONT_HPP
 #define FONT_HPP
 
+#include <QChar>
 #include <QString>
 #include <QList>
-#include <QPainterPath>
+
+#include "Glyph.hpp"
 
 class Font
 {
 public:
-    Font(QString name);
+    Font();
+    virtual ~Font() = default;
     
-    bool addGlyph(QChar ordinal);
-    bool removeGlyph(QChar ordinal);
-    
-    QList<QChar> m_glyphs;
-    QList<QPainterPath> m_painter_paths;
+    QList<Glyph *> m_glyphs;
 };
 
 #endif

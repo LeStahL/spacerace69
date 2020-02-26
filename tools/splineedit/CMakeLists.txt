@@ -11,7 +11,12 @@ set(CMAKE_AUTOMOC ON)
 set(SPLINEEDIT_SRC
     SplineEdit.qrc
     SplineEdit.ui
+    
     SplineEdit.cpp
+    FontModel.cpp
+    
+    Font.cpp
+    Glyph.cpp
 )
 
 add_executable(SplineEdit ${SPLINEEDIT_SRC})
