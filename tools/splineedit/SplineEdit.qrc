@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/edit-delete.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/system-log-out.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/list-add.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/list-remove.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/document-new.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/document-open.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/document-save.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/document-save-as.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/edit-copy.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/edit-cut.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/edit-delete.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/edit-paste.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/edit-redo.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/edit-select-all.png</file>
+    <file>../../thirdparty/tango-icon-theme/32x32/actions/edit-undo.png</file>
+  </qresource>
+</RCC>
