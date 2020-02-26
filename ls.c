@@ -23,13 +23,14 @@
 
 #define DEMO
 
+#include "common.h"
+
 #ifdef MIDI
 #include "engine/midi.h"
 #endif
 
 int _fltused = 0;
 
-#include "common.h"
 
 #ifdef DEBUG
 #include "engine/debug.h"
@@ -269,21 +270,23 @@ void CALLBACK MidiInProc_apc40mk2(HMIDIIN hMidiIn, UINT wMsg, DWORD dwInstance, 
 }*/
 #endif
 
-void create_render_framebuffers()
-{
+// void create_render_framebuffers()
+// {
+    
+    
     // Create framebuffer for rendering first pass to
-    glGenFramebuffers(1, &first_pass_framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, first_pass_framebuffer);
-    glGenTextures(1, &first_pass_texture);
-    glBindTexture(GL_TEXTURE_2D, first_pass_texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, first_pass_texture, 0);
-    glDrawBuffer(GL_COLOR_ATTACHMENT0);
-}
+//     glGenFramebuffers(1, &first_pass_framebuffer);
+//     glBindFramebuffer(GL_FRAMEBUFFER, first_pass_framebuffer);
+//     glGenTextures(1, &first_pass_texture);
+//     glBindTexture(GL_TEXTURE_2D, first_pass_texture);
+//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+//     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, first_pass_texture, 0);
+//     glDrawBuffer(GL_COLOR_ATTACHMENT0);
+// }
 
 void load_compressed_sound()
 {
@@ -365,7 +368,7 @@ void load_sound_block(int music_block)
     glUniform1f(sfx_volumelocation, 1.);
     glUniform1f(sfx_samplerate_location, (float)sample_rate);
     glUniform1f(sfx_blockoffset_location, (float)tstart);
-    glUniform1f(sfx_texs_location, (float)texs);
+    glUniform1i(sfx_texs_location, texs);
     glUniform1i(sfx_sequence_texture_location, 0);
     glUniform1f(sfx_sequence_width_location, sequence_texture_size);
 
@@ -420,7 +423,9 @@ void load_demo()
 
     printf("++++ Loading bar created.\n");
 
-    create_render_framebuffers();
+    // Set up shadertoy-like buffer system
+    glGenFramebuffers(4, &bufferA, &bufferB, &bufferC, &bufferD);
+    glGenTextures(4, &channel0, &channel1, &channel2, &channel3);
 
     updateBar();
 
@@ -532,7 +537,7 @@ void draw()
     glUniform1f(shader_uniform_gfx_text_iTime, t);
     glUniform1i(shader_uniform_gfx_text_iChannel0, 0);
     glUniform1i(shader_uniform_gfx_text_iFont, 1);
-//     glUniform1f(shader_uniform_gfx_text_iFSAA, fsaa);
+    glUniform1f(shader_uniform_gfx_text_iFSAA, fsaa);
     
 #ifdef MIDI
 //     glUniform1f(shader_uniform_gfx_text_iFader0, faders[0]);

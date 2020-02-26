@@ -568,6 +568,8 @@ int WINAPI demo(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, in
 #endif
 
 		draw();
+        
+        t_last_frame = t_now;
 	}
 
 	return 0;

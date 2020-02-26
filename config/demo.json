@@ -1,9 +1,9 @@
 {
-    "name":"Spacerace 69",
-    "identifier":"spacerace69",
+    "name":"Lightcyber",
+    "identifier":"lightcyber",
     "group":"Team210",
-    "party":"Revision",
-    "year":2020,
+    "party":"Evoke",
+    "year":2019,
     "description":[
         "We proudly invite you to EVOKE 2019.",
         "The party will happen at AHK.",
@@ -11,7 +11,8 @@
     ],
     "license":[
         "Demo is (c) YEAR GROUP and licensed under GPLv3, see LICENSE",
-        "Font is 'Roboto Mono' and is (c) 2015 Google Inc., licensed under Apache, see thirdparty/Roboto_Mono/LICENSE.txt"
+        "Font is 'Roboto Mono' and is (c) 2015 Google Inc., licensed under Apache, see thirdparty/Roboto_Mono/LICENSE.txt",
+        "Tango icon theme is public domain; see thirdparty/tango-icon-theme/COPYING"
     ],
     "authors":
     [
@@ -32,28 +33,64 @@
             "realname":"Michael Daam",
             "email":"mic@z10.info",
             "credits":["gfx","direction","feedback"]
+        },
+        {
+            "handle":"grenzdevil",
+            "realname":"",
+            "email":"",
+            "credits":["direction"]
+        },
+        {
+            "handle":"DaDummy",
+            "realname":"Christopher Anselm",
+            "email":"c.anselm@paindevs.com",
+            "credits":["code"]
         }
     ],
-    "length":180.0,
+    "length":187.061354,
+    "loading bar":"load.frag",
+    "precalc":
+    [
+        {
+            "TODO":"design"
+        }
+    ],
     "scenes":
     [
         {
-            "name":"Scene 1",
-            "fragment":"scene1.frag",
-            "authors":
+            "name":"Logo 210",
+            "passes":
             [
-                {"name":"NR4"}
+                 {
+                    "pass name":"Main pass",
+                    "input textures":[],
+                    "input filtering":[],
+                    "output texture":0,
+                    "fragment":"logo210.frag"
+                 },
+                 {
+                    "pass name":"Post processing",
+                    "input textures":[0],
+                    "input filtering":["linear"],
+                    "output texture":0,
+                    "fragment":"post.frag"
+                 },
+                 {
+                    "pass name":"Text",
+                    "input textures":[0],
+                    "input filtering":["linear"],
+                    "output texture":-1,
+                    "fragment":"text.frag"
+                 }
             ],
             "start":0.0
-        },
-        {
-            "name":"Scene 2",
-            "fragment":"scene2.frag",
-            "authors":
-            [
-                {"name":"NR4"}
-            ],
-            "start":20.0
         }
-    ]
+    ],
+    "configuration":
+    {
+        "terminal debug output":true,
+        "shader debug output":true,
+        "recording capabilities":true,
+        "midi features":false
+    }
 }

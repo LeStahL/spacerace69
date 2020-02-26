@@ -34,6 +34,7 @@
 #define TRUE (1)
 #define ABS(x) ((x)<0?(-x):(x))
 #define sign(x) ((x)<0?-1.:1.)
+#define clamp(x, minimum, maximum) min(max(x, minimum), maximum)
 
 #ifdef WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -49,9 +50,16 @@
 #include <GL/gl.h>
 #include <glext.h>
 
-
-#define clamp(x, minimum, maximum) min(max(x, minimum), maximum)
-
+// Framebuffers
+GLuint bufferA = 0,
+    bufferB = 0,
+    bufferC = 0,
+    bufferD = 0;
+// Textures
+GLuint channel0 = 0,
+    channel1 = 0,
+    channel2 = 0,
+    channel3 = 0;
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -167,7 +175,8 @@ int
 char debug_output[1024];
 
 // Demo globals
-double t
+double t,
+    t_last_frame = -1.
 #ifdef MIDI
     ,
     time_dial = 0.,
@@ -203,10 +212,9 @@ char record_filename[1024];
 
 double t_paused;
 
-GLuint first_pass_framebuffer = 0, first_pass_texture;
-GLenum error;
-#define NSHADERS 4.
+// GLuint first_pass_framebuffer = 0, first_pass_texture;
 
+GLenum error;
 float t_load_end = 0.;
 
 void load_demo();

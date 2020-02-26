@@ -34,9 +34,6 @@ f = open(rest[0], 'rt')
 demoJSON = json.load(f)
 f.close()
 
-### Generate :/config.gen.cmake
-f = open('config.gen.cmake', 'wt')
-
 demoId = demoJSON['identifier']
 demoGroup = demoJSON['group']
 demoParty = demoJSON['party']
@@ -44,108 +41,69 @@ partyYear = demoJSON['year']
 demoName = demoJSON['name']
 demoLength = demoJSON['length']
 
-# Target name
-f.write('set(DEMO_IDENTIFIER ' + demoId + ')' + '\n')
+# Scan for all shader files
+shaderFiles = []
+for sceneJSON in demoJSON['scenes']:
+    for scenePass in sceneJSON['passes']:
+        shaderFiles += [ 'gfx/' + scenePass['fragment'] ]
+shaderFiles = list(set(shaderFiles))
 
-# Scene shader files
+# Load default shader file template
+f = open('generator/shader.frag.template', 'rt')
+shaderTemplate = f.read().replace('$DEMONAME', demoName).replace('$DEMOGROUP', demoGroup).replace('$DEMOPARTY', demoParty).replace('$PARTYYEAR', str(partyYear))
+f.close()
+
+# Check if shader files exist, if not, generate from template
+for shaderFile in shaderFiles:
+    if not os.path.exists(shaderFile):
+        f = open(shaderFile, 'wt')
+        f.write(shaderTemplate)
+        f.close()
+
+#### Generate :/config.gen.cmake
+f = open('config.gen.cmake', 'wt')
+f.write('set(DEMO_IDENTIFIER ' + demoId + ')' + '\n')
 f.write('set(SHADER_FILES\n')
-for scene in demoJSON["scenes"]:
-    filename = 'gfx/' + scene["fragment"]
-    
-    # Create default shader (that compiles) if shader is not present.
-    if not os.path.exists(filename):
-        g = open(filename, "wt")
-        g.write("/* " + demoId + " - PC64k intro by " + demoGroup + ' at ' + demoParty + str(partyYear) + '\n')
-        for author in scene['authors']:
-            authorData = authorJSON(author['name'], demoJSON)
-            g.write(" * Copyright (C) " + str(partyYear) + " " + authorData['realname'] + ' <' + authorData['email'] + '>\n')
-        g.write(' *\n')
-        g.write(' * This program is free software: you can redistribute it and/or modify\n')
-        g.write(' * it under the terms of the GNU General Public License as published by\n')
-        g.write(' * the Free Software Foundation, either version 3 of the License, or\n')
-        g.write(' * (at your option) any later version.\n')
-        g.write(' *')
-        g.write(' * This program is distributed in the hope that it will be useful,\n')
-        g.write(' * but WITHOUT ANY WARRANTY; without even the implied warranty of\n')
-        g.write(' * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n')
-        g.write(' * GNU General Public License for more details.\n')
-        g.write(' *\n')
-        g.write(' * You should have received a copy of the GNU General Public License\n')
-        g.write(' * along with this program.  If not, see <https://www.gnu.org/licenses/>.\n')
-        g.write(' */\n')
-        g.write('\n')
-        g.write('#version 130\n')
-        g.write('\n')
-        g.write('out vec4 gl_FragColor;\n')
-        g.write('\n')
-        g.write('uniform float iTime;\n')
-        g.write('uniform vec2 iResolution;\n')
-        g.write('\n')
-        g.write('void main()\n')
-        g.write('{\n')
-        g.write('}\n')
-        g.close()
-    
-    # Add filename to scenes list
-    f.write('    ' + filename + '\n')
-f.write('    gfx/load.frag\n')
-f.write('    gfx/post.frag\n')
-f.write('    gfx/text.frag\n')
-f.write('    gfx/debug.frag\n')
+for shaderFile in shaderFiles:
+    f.write('    ' + shaderFile + '\n')
 f.write(')\n')
 f.close()
 
-### Generate :/[demogroup].nfo
-f = open(demoGroup + ".nfo", "wt")
-f.write('            _________________________           \n')
-f.write('           /\\           ____         \\          \n')
-f.write('          /  \\          \\  /\\         \\         \n')
-f.write('         /    \\          \\/  \\         \\        \n')
-f.write('        /  /\\  \\          \\   \\         \\       \n')
-f.write('       /  /__\\  \\          \\   \\         \\      \n')
-f.write('      /   \\   \\  \\          \\   \\         \\     \n')
-f.write('     /     \\   \\  \\          \\___\\         \\    \n')
-f.write('    /  /\\   \\   \\  \\           ____         \\   \n')
-f.write('   /  /  \\   \\   \\  \\          \\  /\\         \\  \n')
-f.write('  /  /    \\   \\   \\  \\          \\/  \\         \\ \n')
-f.write(' /  /   ___\\   \\___\\  \\          ¯¯¯¯          \\\n')
-f.write(' \\ /__ /\\   \\  /   /  /¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯/\n')
-f.write('  \\\\  /  \\   \\/__ /  /   _________________    / \n')
-f.write('   \\\\/    \\      /  /   /     \\__\\       /   /  \n')
-f.write('    \\      \\    /  /   /      /  /      /   /   \n')
-f.write('     \\      \\  /  /   /      /  / \\    /   /    \n')
-f.write('      \\   /\\ \\/  /   /\\     /  /   \\  /   /     \n')
-f.write('       \\ /__\\   /   /  \\   /  / \\   \\/   /      \n')
-f.write('        \\\\  /  /    ¯¯¯/  /  /  /¯¯¯¯   /       \n')
-f.write('         \\\\/  /       / \\/  /  /       /        \n')
-f.write('          \\  /       /   ¯¯¯  /       /         \n')
-f.write('           \\/        ¯¯¯¯¯¯¯¯¯       /          \n')
-f.write('            ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯           \n')
-f.write('\n')
-f.write((':: ' + demoName + ' ::').center(49)+'\n')
-f.write(('by ' + demoGroup).center(49)+'\n')
-f.write(('at ' + demoParty + ' ' + str(partyYear)).center(49)+'\n')
-f.write('\n\n')
-f.write((':: Instructions ::').center(49)+'\n')
-f.write(('\"offend\" plays the demo.').center(49)+'\n')
-f.write(('If it crashes, try selecting different').center(49)+'\n')
-f.write(('SFX buffer sizes in the selector.').center(49)+'\n')
-f.write('\n\n')
-f.write((':: ' + demoGroup + ' ::').center(49)+'\n')
-for author in demoJSON['authors']:
-    line = author['handle'] + ' - fancy '
-    for credit in author['credits'][:-1]:
-        line += credit + ' ^ '
-    line += author['credits'][-1]
-    f.write(line.center(49)+'\n')
-f.write('\n\n')
-f.write(('Once we offend, we cannot stop.').center(49)+'\n')
-for line in demoJSON['description']:
-    f.write(line.center(49)+'\n')
-f.write('\n')
+# Generate author list
+authorList = ""
+centeredAuthorList = ""
+for authorJSON in demoJSON['authors']:
+    authorLine = authorJSON['handle'] + ' - fancy '
+    for credit in authorJSON['credits'][:-1]:
+        authorLine += credit + ' ^ '
+    authorLine += authorJSON['credits'][-1] + '\n'
+    authorList += authorLine
+    centeredAuthorList += '!' + authorLine 
+    
+# Generate description
+centeredDescriptionList = ""
+for description in demoJSON['description']:
+    centeredDescriptionList += description.center(50) + '\n'
+
+# Load NFO template
+f = open('generator/demogroup.nfo.template', mode='r', encoding='utf-8')
+nfoTemplate = f.read().replace('$DEMONAME', demoName).replace('$DEMOGROUP', demoGroup).replace('$DEMOPARTY', demoParty).replace('$PARTYYEAR', str(partyYear)).replace('$AUTHORLIST', centeredAuthorList)
+nfoLines = nfoTemplate.split('\n')
+nfoTemplate = ""
+for line in nfoLines:
+    if line.startswith('!'):
+        nfoTemplate += line[1:].center(50) + '\n'
+    else:
+        nfoTemplate += line + '\n'
+nfoTemplate = nfoTemplate.replace('$DESCRIPTION', centeredDescriptionList)
 f.close()
 
-### Generate common.gen.h with global settings like demo name, duration, etc.
+#### Generate :/[demogroup].nfo
+f = open(demoGroup + ".nfo", mode="w")
+f.write(nfoTemplate)
+f.close()
+
+#### Generate common.gen.h with global settings like demo name, duration, etc.
 f = open('common.gen.h', 'wt')
 f.write('#ifndef COMMON_GEN_H\n')
 f.write('#define COMMON_GEN_H\n')
@@ -155,7 +113,7 @@ f.write('const double duration1 = duration;\n')
 f.write('#endif\n')
 f.close()
 
-### Generate readme.md with up-to-date information
+#### Generate readme.md with up-to-date information
 f = open('readme.md', 'wt')
 f.write('# ' + demoName + '\n')
 f.write('PC-64k-Intro by ' + demoGroup + ' at ' + demoParty + ' ' + str(partyYear) + '\n\n')
@@ -171,47 +129,109 @@ for author in demoJSON['authors']:
     f.write('- '+line+'\n')
 f.close()
 
-### Generate scenes.gen.h with scene information
+#### Generate scenes.gen.h with scene information.
+# Generate framebuffer and texture setup.
+# Number of textures is highest number in input
+# Number of framebuffers is highest number in output
+numTextures = 0
+numFramebuffers = 0
+for sceneJSON in demoJSON['scenes']:
+    for passJSON in sceneJSON['passes']:
+        if passJSON['input textures'] == []: continue
+        numTextures = max(numTextures, max(passJSON['input textures']))
+        numFramebuffers = max(numFramebuffers, passJSON['output texture'])
+numTextures += 1
+numFramebuffers += 1
+
+# Write actual file
 f = open('scenes.gen.h', 'wt')
 f.write('#ifndef SCENES_GEN_H\n')
 f.write('#define SCENES_GEN_H\n')
 f.write('\n')
-for sceneJSON in demoJSON['scenes']:
-    f.write('#define t_' + sceneJSON['fragment'].replace('.frag', '') + ' (' + str(sceneJSON['start'])+')\n')
+f.write('GLuint pass_textures[' + str(numTextures) + '], pass_framebuffers[' + str(numFramebuffers) + '];\n')
+f.write('\n')
+f.write('void create_render_framebuffers()\n')
+f.write('{\n')
+f.write('    glGenFramebuffers(' + str(numFramebuffers) + ', pass_framebuffers);\n')
+f.write('    glGenTextures(' + str(numTextures) + ', pass_textures);\n')
+for i in range(numTextures):
+    f.write('    glBindTexture(GL_TEXTURE_2D, pass_textures[' + str(i) + ']);\n')
+    f.write('    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);\n')
+    f.write('    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);\n')
+f.write('}\n')
+f.write('\n')
+for i in range(len(demoJSON['scenes'])):
+    sceneJSON = demoJSON['scenes'][i]
+    f.write('void setup_scene_' + str(i) + '_rendergraph()\n')
+    f.write('{\n')
+    for j in range(len(sceneJSON['passes'])):
+        passJSON = sceneJSON['passes'][j]
+        if passJSON['output texture'] == -1: continue
+        f.write('    glBindFramebuffer(GL_FRAMEBUFFER, pass_framebuffers[' + str(passJSON['output texture']) + ']);\n')
+        f.write('    glBindTexture(GL_TEXTURE_2D, pass_textures[' + str(passJSON['output texture']) + ']);\n')
+        f.write('    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);\n')
+        f.write('    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pass_textures[' + str(passJSON['output texture']) + '], 0);\n')
+        f.write('    glDrawBuffer(GL_COLOR_ATTACHMENT0);\n')
+    f.write('}\n')
+    f.write('\n')
+    f.write('#define t_' + str(i) + ' (' + str(sceneJSON['start']) + ')\n')
 f.write('const double start_times[] = {\n')
-for sceneJSON in demoJSON['scenes'][:-1]:
-    sceneIdentifier = sceneJSON['fragment'].replace('.frag', '')
-    f.write('t_' + sceneIdentifier + ',' + '\n')
-f.write('t_' + demoJSON['scenes'][-1]['fragment'].replace('.frag', '') + '\n};\n')
+for i in range(len(demoJSON['scenes'][:-1])):
+    f.write('    t_' + str(i) + ',\n')
+f.write('    t_' + str(len(demoJSON['scenes'])-1) + '\n};\n')
 f.write('const char *scene_names[] = {\n')
 for sceneJSON in demoJSON['scenes'][:-1]:
-    f.write('\"' + sceneJSON['name']+ '\",' + '\n')
-f.write('\"' + demoJSON['scenes'][-1]['name']+ '\"' + '\n};\n')
+    f.write('    \"' + sceneJSON['name'] + '\",')
+f.write('    \"' + demoJSON['scenes'][-1]['name'] + '\"\n};\n')
 f.write('const unsigned int nscenes = ARRAYSIZE(start_times);\n')
-f.write('// We need these two arrays to always have the same size - the following line will cause a compiler error if this is ever not the case\n')
-f.write('_STATIC_ASSERT(ARRAYSIZE(start_times) == ARRAYSIZE(scene_names));\n')
-f.write('#endif')
+f.write('#endif\n')
 f.close()
 
-### Generate draw.gen.h with drawing code
+#### Generate draw.gen.h with scene drawing information.
+# When a scene gets drawn for the first time, call setup_scene_x_rendergraph()
+# select proper framebuffers, input textures, shader and uniforms for each pass.
 f = open('draw.gen.h', 'wt')
 f.write('#ifndef DRAW_GEN_H\n')
 f.write('#define DRAW_GEN_H\n')
 for i in range(len(demoJSON['scenes'])):
     sceneJSON = demoJSON['scenes'][i]
-    sceneIdentifier = sceneJSON['fragment'].replace('.frag', '')
-    if i > 0: 
-        f.write('else ')
-    if i < len(demoJSON['scenes'])-1:
-        f.write('if(t < t_' + demoJSON['scenes'][i+1]['fragment'].replace('.frag', '') + ')\n')
-    f.write('{\n')
-    f.write('    glUseProgram(shader_program_gfx_' + sceneIdentifier + '.handle);\n')
-    f.write('    glUniform1f(shader_uniform_gfx_' + sceneIdentifier + '_iTime, t - t_' + sceneIdentifier + ');\n')
-    f.write('    glUniform2f(shader_uniform_gfx_' + sceneIdentifier + '_iResolution, w, h);\n')
-    f.write('#ifdef MIDI\n')
-    for j in range(8):
-        f.write('    glUniform1f(shader_uniform_gfx_' + sceneIdentifier + '_iFader' + str(j) + ', fader' + str(j) + ');\n')
-    f.write('#endif\n')
-    f.write('}\n')
+    
 f.write('#endif\n')
 f.close()
+
+#### Generate draw.gen.h with drawing code
+#f = open('draw.gen.h', 'wt')
+#f.write('#ifndef DRAW_GEN_H\n')
+#f.write('#define DRAW_GEN_H\n')
+#for i in range(len(demoJSON['scenes'])):
+    #sceneJSON = demoJSON['scenes'][i]
+    #sceneIdentifier = sceneJSON['fragment'].replace('.frag', '')
+    #scenePasses = sceneJSON['passes']
+    
+    #if i > 0: 
+        #f.write('else ')
+    #if i < len(demoJSON['scenes'])-1:
+        #f.write('if(t < t_' + demoJSON['scenes'][i+1]['fragment'].replace('.frag', '') + ')\n')
+    #f.write('{\n')
+    
+    ## Switch buffer setup if frame is first frame in scene
+    #f.write('    if(t_last_frame < t_' + sceneJSON['fragment'].replace('.frag', '') + ')\n')
+    #f.write('    {\n')
+    #for scenePass in scenePasses:
+        #f.write('        glBindFramebuffer(GL_FRAMEBUFFER, ' + scenePass['
+    #f.write('    }\n')
+    
+    ## Use matching shader program and update uniforms
+    #f.write('    glUseProgram(shader_program_gfx_' + sceneIdentifier + '.handle);\n')
+    #if 'time offset' in sceneJSON:
+            #f.write('    glUniform1f(shader_uniform_gfx_' + sceneIdentifier + '_iTime, t - t_' + sceneIdentifier + ' + ' + str(sceneJSON['time offset']) + ');\n')
+    #else:
+        #f.write('    glUniform1f(shader_uniform_gfx_' + sceneIdentifier + '_iTime, t - t_' + sceneIdentifier + ');\n')
+    #f.write('    glUniform2f(shader_uniform_gfx_' + sceneIdentifier + '_iResolution, w, h);\n')
+    #f.write('#ifdef MIDI\n')
+    #for j in range(8):
+        #f.write('    glUniform1f(shader_uniform_gfx_' + sceneIdentifier + '_iFader' + str(j) + ', fader' + str(j) + ');\n')
+    #f.write('#endif\n')
+    #f.write('}\n')
+#f.write('#endif\n')
+#f.close()

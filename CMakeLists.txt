@@ -153,3 +153,5 @@ if(WIN32)
     message("Binary is in: $<TARGET_FILE_DIR:studio>")
     add_custom_command(TARGET studio COMMAND ${WINDEPLOYQT_EXECUTABLE} "$<TARGET_FILE:studio>")
 endif()
+
+add_subdirectory(tools)
