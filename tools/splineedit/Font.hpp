@@ -14,6 +14,7 @@ public:
     virtual ~Font() = default;
     
     QList<Glyph *> m_glyphs;
+    QString m_name;
 };
 
 #endif

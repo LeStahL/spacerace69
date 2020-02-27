@@ -28,7 +28,11 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QGraphicsView" name="graphicsView"/>
+     <widget class="QGraphicsView" name="graphicsView">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -102,6 +106,15 @@
      </property>
      <item>
       <widget class="QTableView" name="tableView">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="alternatingRowColors">
         <bool>true</bool>
        </property>
@@ -149,6 +162,12 @@
    <property name="text">
     <string>New Font</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+   <property name="shortcutVisibleInContextMenu">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionOpen_Font">
    <property name="icon">
@@ -158,6 +177,9 @@
    <property name="text">
     <string>Open Font</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="actionRecent_Fonts">
    <property name="text">
@@ -165,6 +187,9 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/document-save.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/document-save.png</iconset>
@@ -172,14 +197,23 @@
    <property name="text">
     <string>Save</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionSave_As">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/document-save-as.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/document-save-as.png</iconset>
    </property>
    <property name="text">
     <string>Save As</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -190,8 +224,14 @@
    <property name="text">
     <string>Quit</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
   </action>
   <action name="actionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-undo.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-undo.png</iconset>
@@ -199,8 +239,14 @@
    <property name="text">
     <string>Undo</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
   </action>
   <action name="actionRedo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-redo.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-redo.png</iconset>
@@ -208,8 +254,14 @@
    <property name="text">
     <string>Redo</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z, Ctrl+R</string>
+   </property>
   </action>
   <action name="actionCut">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-cut.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-cut.png</iconset>
@@ -217,8 +269,14 @@
    <property name="text">
     <string>Cut</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="actionCopy">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-copy.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-copy.png</iconset>
@@ -226,8 +284,14 @@
    <property name="text">
     <string>Copy</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionPaste">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-paste.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-paste.png</iconset>
@@ -235,8 +299,14 @@
    <property name="text">
     <string>Paste</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
   </action>
   <action name="actionDelete">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-delete.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-delete.png</iconset>
@@ -244,8 +314,14 @@
    <property name="text">
     <string>Delete</string>
    </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
   </action>
   <action name="actionSelect_All">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-select-all.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/edit-select-all.png</iconset>
@@ -253,8 +329,14 @@
    <property name="text">
     <string>Select All</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
   <action name="actionAdd_Glyph">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/list-add.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/list-add.png</iconset>
@@ -262,8 +344,14 @@
    <property name="text">
     <string>Add Glyph</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+]</string>
+   </property>
   </action>
   <action name="actionRemove_Glyph">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="SplineEdit.qrc">
      <normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/list-remove.png</normaloff>:/icons/thirdparty/tango-icon-theme/32x32/actions/list-remove.png</iconset>
@@ -271,10 +359,67 @@
    <property name="text">
     <string>Remove Glyph</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
   </action>
  </widget>
  <resources>
   <include location="SplineEdit.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionNew_Font</sender>
+   <signal>triggered()</signal>
+   <receiver>SplineEdit</receiver>
+   <slot>fileNew()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionUndo</sender>
+   <signal>triggered()</signal>
+   <receiver>SplineEdit</receiver>
+   <slot>editUndo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRedo</sender>
+   <signal>triggered()</signal>
+   <receiver>SplineEdit</receiver>
+   <slot>editRedo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>fileNew()</slot>
+  <slot>editUndo()</slot>
+  <slot>editRedo()</slot>
+ </slots>
 </ui>
