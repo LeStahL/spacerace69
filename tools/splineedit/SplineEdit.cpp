@@ -3,6 +3,7 @@
 
 #include "SplineEdit.hpp"
 #include "NewFontUndoCommand.hpp"
+#include "AddGlyphUndoCommand.hpp"
 
 int main(int argc, char **args)
 {
@@ -16,6 +17,7 @@ SplineEdit::SplineEdit(QApplication* app)
     : m_ui(Ui::SplineEdit())
     , m_app(app)
     , m_font(nullptr)
+    , m_font_model(nullptr)
 {
     m_ui.setupUi(this);
 }
@@ -46,4 +48,10 @@ void SplineEdit::manageEnabled()
 {
     m_ui.actionRedo->setEnabled(m_undo_stack.canRedo());
     m_ui.actionUndo->setEnabled(m_undo_stack.canUndo());
+}
+
+void SplineEdit::fontAddGlyph()
+{
+    m_undo_stack.push(new AddGlyphUndoCommand(this, m_font));
+    manageEnabled();
 }

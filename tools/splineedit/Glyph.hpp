@@ -8,7 +8,7 @@
 class Glyph
 {
 public:
-    Glyph(QChar ordinal);
+    Glyph(QChar ordinal = ' ');
     virtual ~Glyph() = default;
     
     QVariant numberOfQuadraticControls();

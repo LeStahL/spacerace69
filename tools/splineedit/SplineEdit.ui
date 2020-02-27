@@ -416,10 +416,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionAdd_Glyph</sender>
+   <signal>triggered()</signal>
+   <receiver>SplineEdit</receiver>
+   <slot>fontAddGlyph()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>fileNew()</slot>
   <slot>editUndo()</slot>
   <slot>editRedo()</slot>
+  <slot>fontAddGlyph()</slot>
  </slots>
 </ui>

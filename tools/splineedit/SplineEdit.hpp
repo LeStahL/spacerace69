@@ -22,12 +22,14 @@ private slots:
     void fileNew();
     void editUndo();
     void editRedo();
+    void fontAddGlyph();
     
 public:
     Ui::SplineEdit m_ui;
     QApplication *m_app;
     QUndoStack m_undo_stack;
     Font *m_font;
+    FontModel *m_font_model;
 };
 
 #endif

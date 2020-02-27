@@ -5,6 +5,7 @@
 
 #include "Font.hpp"
 #include "SplineEdit.hpp"
+#include "FontModel.hpp"
 
 class NewFontUndoCommand : public QUndoCommand
 {
@@ -17,6 +18,7 @@ public:
     
     Font *m_font, *m_old_font;
     SplineEdit *m_spline_edit;
+    FontModel *m_font_model, *m_old_font_model;
 };
 
 #endif

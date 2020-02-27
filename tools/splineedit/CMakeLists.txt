@@ -15,6 +15,7 @@ set(SPLINEEDIT_SRC
     SplineEdit.cpp
     FontModel.cpp
     NewFontUndoCommand.cpp
+    AddGlyphUndoCommand.cpp
     
     Font.cpp
     Glyph.cpp
