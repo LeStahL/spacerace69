@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QChar>
 
 #include "SplineEdit.hpp"
 
@@ -15,6 +16,15 @@ SplineEdit::SplineEdit(QApplication* app)
     , m_app(app)
 {
     m_ui.setupUi(this);
+    
+    // ### Test Font display
+    Font *font = new Font();
+    font->m_glyphs.push_back(new Glyph(QChar('a')));
+    font->m_glyphs.push_back(new Glyph(QChar('b')));
+    font->m_glyphs.push_back(new Glyph(QChar('c')));
+    FontModel *model = new FontModel(font);
+    m_ui.tableView->setModel(model);
+    update();
 }
 
 SplineEdit::~SplineEdit()

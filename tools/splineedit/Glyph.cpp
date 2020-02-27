@@ -7,10 +7,10 @@ Glyph::Glyph(QChar ordinal)
 
 QVariant Glyph::numberOfCubicControls()
 {
-    return QVariant(m_cubic_controls.size());
+    return QVariant(m_cubic_controls.size()/3);
 }
 
-int Glyph::numberOfQuadraticControls()
+QVariant Glyph::numberOfQuadraticControls()
 {
-    return QVariant(m_cubic_controls.size());
+    return QVariant(m_cubic_controls.size()/2);
 }

@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "ui_SplineEdit.h"
 
+#include "FontModel.hpp"
+#include "Font.hpp"
+
 class SplineEdit : public QMainWindow
 {
 public:

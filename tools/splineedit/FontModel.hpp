@@ -11,13 +11,15 @@
 class FontModel : public QAbstractTableModel
 {
 public:
-    FontModel(QObject *parent = nullptr);
+    FontModel(Font *font = nullptr, QObject *parent = nullptr);
     virtual ~FontModel() = default;
     
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    
+    Font *m_font;
 };
 
 #endif
